@@ -30,28 +30,39 @@ class Currency implements ICurrency {
   }
 }
 
-interface IButton {
-  id: string;
-  text: string;
-  btnRef: HTMLButtonElement;
-  classes?: string[];
-  onClick: (event: Event) => void;
-}
-
-class Button implements IButton {
-  public id;
-  public text;
-  public btnRef;
-  public classes;
-  public onClick;
-  constructor({ id, text, btnRef, classes, onClick }: IButton) {
+class Button {
+  private btnRef: HTMLButtonElement;
+  private id;
+  private text;
+  private classes: string = "";
+  constructor(id: string, text: string) {
     this.id = id;
     this.text = text;
-    this.btnRef = btnRef;
+
+    this.btnRef = document.createElement("button");
+    this.btnRef.id = this.id;
+    this.btnRef.textContent = this.text;
+    document.body.appendChild(this.btnRef);
+  }
+  set setClasses(classes: string) {
     this.classes = classes;
-    this.onClick = onClick;
+  }
+  get getClasses(): string {
+    return this.classes;
+  }
+  public addClass(name: string): void {
+    if (this.classes === "") {
+      this.classes += `${name}`;
+      this.btnRef.classList.add(name);
+    } else {
+      this.classes += ` ${name}`;
+      this.btnRef.classList.add(name);
+    }
   }
 }
+
+const btn = new Button("btn", "Click me");
+btn.addClass("btn");
 
 class Game {
   private currencies: Currency[] = [];
