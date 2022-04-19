@@ -5,7 +5,7 @@ const currencyList = [
     { name: "JPY", amount: 300 },
 ];
 class Currency {
-    constructor(name, amount) {
+    constructor({ name, amount }) {
         this.name = "";
         this.amount = 0;
         this.name = name;
@@ -18,11 +18,20 @@ class Currency {
         return this.amount;
     }
 }
+class Button {
+    constructor({ id, text, btnRef, classes, onClick }) {
+        this.id = id;
+        this.text = text;
+        this.btnRef = btnRef;
+        this.classes = classes;
+        this.onClick = onClick;
+    }
+}
 class Game {
-    constructor(object) {
+    constructor(currencies) {
         this.currencies = [];
-        object.forEach((element) => {
-            this.currencies.push(new Currency(element.name, element.amount));
+        currencies.forEach((args) => {
+            this.currencies.push(new Currency(args));
         });
     }
 }

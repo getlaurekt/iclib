@@ -1,8 +1,9 @@
 type Name = string;
 type Amount = number;
+type CurrencyItem = { name: Name; amount: Amount };
 type CurrencyList = { name: Name; amount: Amount }[];
 
-interface Currency {
+interface ICurrency {
   name: Name;
   amount: Amount;
 }
@@ -13,11 +14,11 @@ const currencyList: CurrencyList = [
   { name: "JPY", amount: 300 },
 ];
 
-class Currency implements Currency {
+class Currency implements ICurrency {
   name = "";
   amount = 0;
 
-  constructor(name: Name, amount: Amount) {
+  constructor({ name, amount }: ICurrency) {
     this.name = name;
     this.amount = amount;
   }
@@ -29,12 +30,35 @@ class Currency implements Currency {
   }
 }
 
+interface IButton {
+  id: string;
+  text: string;
+  btnRef: HTMLButtonElement;
+  classes?: string[];
+  onClick: (event: Event) => void;
+}
+
+class Button implements IButton {
+  public id;
+  public text;
+  public btnRef;
+  public classes;
+  public onClick;
+  constructor({ id, text, btnRef, classes, onClick }: IButton) {
+    this.id = id;
+    this.text = text;
+    this.btnRef = btnRef;
+    this.classes = classes;
+    this.onClick = onClick;
+  }
+}
+
 class Game {
   private currencies: Currency[] = [];
 
-  constructor(object: { name: Name; amount: Amount }[]) {
-    object.forEach((element) => {
-      this.currencies.push(new Currency(element.name, element.amount));
+  constructor(currencies: CurrencyItem[]) {
+    currencies.forEach((args) => {
+      this.currencies.push(new Currency(args));
     });
   }
 }
