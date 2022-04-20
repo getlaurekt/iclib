@@ -30,27 +30,50 @@ class Currency implements ICurrency {
   }
 }
 
-const hehe = () => {
-  console.log("hehe");
-};
+class Icon {
+  readonly iconRef!: HTMLSpanElement;
+  private name: string;
+  private size: number;
+
+  constructor(name: string, size: number) {
+    this.name = name;
+    this.size = size;
+
+    this.iconRef = document.createElement("span");
+    this.iconRef.classList.add("icon");
+    this.iconRef.style.fontSize = `${this.size}px`;
+    this.iconRef.textContent = this.name;
+  }
+  set setName(name: string) {
+    this.name = name;
+    this.iconRef.textContent = this.name;
+  }
+  get getName(): string {
+    return this.name;
+  }
+}
+
+type BtnIcon = "left" | "right";
 
 class Button {
   private btnRef: HTMLButtonElement;
   private id;
   private text;
   private classes: string = "";
-  private action: Function;
-  constructor(id: string, text: string, action?: Function) {
+  private onClick: Function;
+  private isIcon: boolean = false;
+  private iconClass!: Icon;
+  constructor(id: string, text: string, onClick?: Function) {
     this.id = id;
     this.text = text;
-    this.action = action as Function;
+    this.onClick = onClick as Function;
 
     this.btnRef = document.createElement("button");
     this.btnRef.id = this.id;
     this.btnRef.textContent = this.text;
-    if (action !== undefined) {
+    if (onClick !== undefined) {
       this.btnRef.onclick = () => {
-        this.action();
+        this.onClick();
       };
     }
     document.body.appendChild(this.btnRef);
@@ -70,10 +93,26 @@ class Button {
       this.btnRef.classList.add(name);
     }
   }
+  public icon(name: string, size: number, side: BtnIcon): void {
+    if (!this.isIcon) {
+      this.isIcon = true;
+      this.iconClass = new Icon(name, size);
+      if (side === "left") {
+        this.btnRef.insertBefore(
+          this.iconClass.iconRef,
+          this.btnRef.firstChild
+        );
+      } else if (side === "right") {
+        this.btnRef.appendChild(this.iconClass.iconRef);
+      }
+    }
+    this.iconClass.setName = name;
+  }
 }
 
-const btn = new Button("btn", "Click me", hehe);
+const btn = new Button("btn", "Click me");
 btn.addClass("btn");
+btn.icon("rocket", 20, "right");
 
 class Game {
   private currencies: Currency[] = [];
