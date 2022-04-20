@@ -30,18 +30,29 @@ class Currency implements ICurrency {
   }
 }
 
+const hehe = () => {
+  console.log("hehe");
+};
+
 class Button {
   private btnRef: HTMLButtonElement;
   private id;
   private text;
   private classes: string = "";
-  constructor(id: string, text: string) {
+  private action: Function;
+  constructor(id: string, text: string, action?: Function) {
     this.id = id;
     this.text = text;
+    this.action = action as Function;
 
     this.btnRef = document.createElement("button");
     this.btnRef.id = this.id;
     this.btnRef.textContent = this.text;
+    if (action !== undefined) {
+      this.btnRef.onclick = () => {
+        this.action();
+      };
+    }
     document.body.appendChild(this.btnRef);
   }
   set setClasses(classes: string) {
@@ -61,7 +72,7 @@ class Button {
   }
 }
 
-const btn = new Button("btn", "Click me");
+const btn = new Button("btn", "Click me", hehe);
 btn.addClass("btn");
 
 class Game {
