@@ -1,19 +1,34 @@
+//NOTE: Types for currencies
 type Name = string;
 type Amount = number;
 type CurrencyItem = { name: Name; amount: Amount };
 type CurrencyList = { name: Name; amount: Amount }[];
 
+//NOTE: Interface for Currency Class
 interface ICurrency {
   name: Name;
   amount: Amount;
 }
 
+//NOTE: List of current currencies
 const currencyList: CurrencyList = [
   { name: "USD", amount: 100 },
   { name: "EUR", amount: 200 },
   { name: "JPY", amount: 300 },
 ];
 
+//NOTE: List of current items
+type Item = { name: Name; amount: Amount };
+type ItemList = { name: Name; amount: Amount }[];
+
+const itemList: ItemList = [{ name: "Wood", amount: 0 }];
+
+//NOTE: Timers
+type Tick = 1000;
+type Tickrate = number;
+type TimerName = string;
+
+//NOTE: Currency class for creating currencies
 class Currency implements ICurrency {
   name = "";
   amount = 0;
@@ -30,6 +45,7 @@ class Currency implements ICurrency {
   }
 }
 
+//NOTE: Icon component
 class Icon {
   readonly iconRef!: HTMLSpanElement;
   private name: string;
@@ -53,10 +69,11 @@ class Icon {
   }
 }
 
+//NOTE: Button Component
 type BtnIcon = "left" | "right";
 
 class Button {
-  private btnRef: HTMLButtonElement;
+  readonly btnRef: HTMLButtonElement;
   private id;
   private text;
   private classes: string = "";
@@ -76,7 +93,7 @@ class Button {
         this.onClick();
       };
     }
-    document.body.appendChild(this.btnRef);
+    /* document.body.appendChild(this.btnRef); */
   }
   set setClasses(classes: string) {
     this.classes = classes;
@@ -110,10 +127,77 @@ class Button {
   }
 }
 
+//NOTE: Declaring new instance of Button
 const btn = new Button("btn", "Click me");
 btn.addClass("btn");
 btn.icon("rocket", 20, "right");
 
+/* class Upgrade {
+  public name!: string;
+  public currency!: CurrencyItem;
+  public price!: number;
+  public item!: Item;
+  public btn!: Button;
+  constructor(
+    name: string,
+    currency: CurrencyItem,
+    price: number,
+    item: { name: Name; amount: Amount }
+  ) {
+    this.name = name;
+    this.currency = currency;
+    this.price = price;
+    this.item = item;
+
+    this.btn = new Button(name, name, () => {
+      if (this.currency.amount >= this.price) {
+        this.currency.amount -= this.price;
+        this.item.amount += 1;
+      }
+    });
+  }
+}
+
+type ShopList = {
+  name: Name;
+  currency: typeof currencyList;
+  price: Amount;
+  item: typeof itemList;
+};
+
+class Shop {
+  private shopList!: ShopList[];
+  private currency!: typeof currencyList;
+  private ul!: HTMLUListElement;
+  constructor({ name, currency, price, item }: ShopList) {
+    this.shopList.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = `Buy ${item.name}`;
+      li.appendChild(
+        new Upgrade(item.name, item.currency, item.price, item.item).btn.btnRef
+      );
+    });
+  }
+} */
+
+class Timer {
+  private tick: Tick = 1000;
+  private tickrate!: Tickrate;
+  private onTick!: Function;
+  constructor(tickrate: Tickrate, onTick: Function) {
+    this.tickrate = tickrate;
+    this.onTick = onTick;
+
+    setInterval(() => {
+      this.onTick();
+    }, this.tick / this.tickrate);
+  }
+  public clearTimer = () => {
+    clearInterval();
+  };
+}
+
+//NOTE: Game class for controlling all components etc
 class Game {
   private currencies: Currency[] = [];
 
@@ -124,4 +208,5 @@ class Game {
   }
 }
 
+//NOTE: New instance of Game class
 const newGame = new Game(currencyList);
