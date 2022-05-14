@@ -181,6 +181,7 @@ class Shop {
 } */
 
 class Timer {
+  private timer!: ReturnType<typeof setInterval>;
   private tick: Tick = 1000;
   private tickrate!: Tickrate;
   private onTick!: Function;
@@ -188,14 +189,22 @@ class Timer {
     this.tickrate = tickrate;
     this.onTick = onTick;
 
-    setInterval(() => {
+    this.startTimer();
+  }
+  private startTimer = () => {
+    let timer = setInterval(() => {
       this.onTick();
     }, this.tick / this.tickrate);
-  }
+    this.timer = timer;
+  };
   public clearTimer = () => {
-    clearInterval();
+    clearInterval(this.timer);
   };
 }
+
+const t = new Timer(10, () => {
+  console.log("shatan");
+});
 
 //NOTE: Game class for controlling all components etc
 class Game {
